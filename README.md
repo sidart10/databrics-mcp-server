@@ -25,6 +25,16 @@ pip install databricks-mcp-genie
 
 Then configure in Cursor settings - full details in the [Cursor Setup Guide](docs/CURSOR_SETUP.md).
 
+### Automated Code Review
+
+This project now includes automated Claude Code PR reviews! Every pull request receives:
+- Comprehensive code quality analysis
+- Security vulnerability scanning
+- Performance optimization suggestions
+- Best practices validation
+
+PRs are automatically reviewed using GitHub Actions powered by Claude.
+
 ### Prerequisites
 
 - Python 3.10 or higher
