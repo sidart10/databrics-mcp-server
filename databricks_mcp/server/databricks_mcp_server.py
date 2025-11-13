@@ -17,7 +17,7 @@ from mcp.server import FastMCP
 from mcp.types import TextContent
 from mcp.server.stdio import stdio_server
 
-from databricks_mcp.api import clusters, dbfs, jobs, notebooks, sql, libraries, repos, unity_catalog
+from databricks_mcp.api import clusters, dbfs, jobs, notebooks, sql, libraries, repos, unity_catalog, genie
 from databricks_mcp.core.config import settings
 
 # Configure logging
@@ -641,6 +641,89 @@ class DatabricksMCPServer(FastMCP):
                 return [{"type": "text", "text": json.dumps(result)}]
             except Exception as e:
                 logger.error(f"Error getting lineage: {str(e)}")
+                return [{"type": "text", "text": json.dumps({"error": str(e)})}]
+
+        # Genie AI tools
+        @self.tool(
+            name="list_genie_spaces",
+            description="List all available Genie AI spaces in the workspace"
+        )
+        async def list_genie_spaces_tool(params: Dict[str, Any]) -> List[TextContent]:
+            try:
+                result = await genie.list_genie_spaces()
+                return [{"type": "text", "text": json.dumps(result)}]
+            except Exception as e:
+                logger.error(f"Error listing Genie spaces: {str(e)}")
+                return [{"type": "text", "text": json.dumps({"error": str(e)})}]
+
+        @self.tool(
+            name="start_genie_conversation",
+            description="Start a new conversation with Genie AI. Parameters: space_id (required), question (required), wait_for_result (optional, default: true)"
+        )
+        async def start_genie_conversation_tool(params: Dict[str, Any]) -> List[TextContent]:
+            try:
+                actual_params = _unwrap_params(params)
+                result = await genie.start_conversation(
+                    space_id=actual_params.get("space_id"),
+                    question=actual_params.get("question"),
+                    wait_for_result=actual_params.get("wait_for_result", True)
+                )
+                return [{"type": "text", "text": json.dumps(result)}]
+            except Exception as e:
+                logger.error(f"Error starting Genie conversation: {str(e)}")
+                return [{"type": "text", "text": json.dumps({"error": str(e)})}]
+
+        @self.tool(
+            name="send_genie_followup",
+            description="Send a follow-up message in an existing Genie conversation. Parameters: space_id (required), conversation_id (required), question (required), wait_for_result (optional, default: true)"
+        )
+        async def send_genie_followup_tool(params: Dict[str, Any]) -> List[TextContent]:
+            try:
+                actual_params = _unwrap_params(params)
+                result = await genie.send_followup_message(
+                    space_id=actual_params.get("space_id"),
+                    conversation_id=actual_params.get("conversation_id"),
+                    question=actual_params.get("question"),
+                    wait_for_result=actual_params.get("wait_for_result", True)
+                )
+                return [{"type": "text", "text": json.dumps(result)}]
+            except Exception as e:
+                logger.error(f"Error sending Genie follow-up: {str(e)}")
+                return [{"type": "text", "text": json.dumps({"error": str(e)})}]
+
+        @self.tool(
+            name="get_genie_message_status",
+            description="Get the status of a Genie message. Parameters: space_id (required), conversation_id (required), message_id (required)"
+        )
+        async def get_genie_message_status_tool(params: Dict[str, Any]) -> List[TextContent]:
+            try:
+                actual_params = _unwrap_params(params)
+                result = await genie.get_message_status(
+                    space_id=actual_params.get("space_id"),
+                    conversation_id=actual_params.get("conversation_id"),
+                    message_id=actual_params.get("message_id")
+                )
+                return [{"type": "text", "text": json.dumps(result)}]
+            except Exception as e:
+                logger.error(f"Error getting Genie message status: {str(e)}")
+                return [{"type": "text", "text": json.dumps({"error": str(e)})}]
+
+        @self.tool(
+            name="get_genie_query_results",
+            description="Get query results from a Genie message. Parameters: space_id (required), conversation_id (required), message_id (required), attachment_id (required)"
+        )
+        async def get_genie_query_results_tool(params: Dict[str, Any]) -> List[TextContent]:
+            try:
+                actual_params = _unwrap_params(params)
+                result = await genie.get_query_results(
+                    space_id=actual_params.get("space_id"),
+                    conversation_id=actual_params.get("conversation_id"),
+                    message_id=actual_params.get("message_id"),
+                    attachment_id=actual_params.get("attachment_id")
+                )
+                return [{"type": "text", "text": json.dumps(result)}]
+            except Exception as e:
+                logger.error(f"Error getting Genie query results: {str(e)}")
                 return [{"type": "text", "text": json.dumps({"error": str(e)})}]
 
 
