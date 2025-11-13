@@ -1,6 +1,6 @@
-# Databricks MCP Server
+# Databricks MCP Genie
 
-A Model Context Protocol (MCP) server that provides seamless integration between AI assistants (like Claude Desktop) and Databricks workspaces.
+A Model Context Protocol (MCP) server with enhanced Genie AI integration that provides seamless natural language interaction between AI assistants (like Claude Desktop, Cursor) and Databricks workspaces.
 
 ## What This Does
 
@@ -14,24 +14,32 @@ Enables AI assistants to directly interact with your Databricks workspace:
 
 ## Quick Start
 
+### For Cursor Users
+
+**Team Installation (Recommended)**: See [Cursor Setup Guide](docs/CURSOR_SETUP.md) for one-click installation instructions.
+
+Quick install:
+```bash
+pip install databricks-mcp-genie
+```
+
+Then configure in Cursor settings - full details in the [Cursor Setup Guide](docs/CURSOR_SETUP.md).
+
 ### Prerequisites
 
 - Python 3.10 or higher
 - Databricks workspace with personal access token
-- Claude Desktop (or any MCP-compatible client)
+- Cursor IDE, Claude Desktop, or any MCP-compatible client
 
 ### Installation
 
 ```bash
-# Clone the repository
-git clone https://github.com/sidart10/databrics-mcp-server.git
-cd databrics-mcp-server
+# Install from PyPI (recommended)
+pip install databricks-mcp-genie
 
-# Create virtual environment
-python3 -m venv .venv
-source .venv/bin/activate  # On Windows: .venv\Scripts\activate
-
-# Install the package
+# Or install from source
+git clone https://github.com/sidart10/databricks-mcp-genie.git
+cd databricks-mcp-genie
 pip install -e ".[dev]"
 ```
 
@@ -262,10 +270,15 @@ async def your_tool(params: Dict[str, Any]) -> List[TextContent]:
 
 ## Documentation
 
+### Setup & Installation
+- [Cursor Setup Guide](./docs/CURSOR_SETUP.md) - One-click installation for Cursor (recommended for teams)
 - [QUICK_START.md](./QUICK_START.md) - Getting started guide
+- [Deployment Summary](./docs/DEPLOYMENT_SUMMARY.md) - Package distribution overview
+
+### Development & Publishing
+- [PUBLISHING.md](./PUBLISHING.md) - How to publish to PyPI
 - [TROUBLESHOOTING.md](./TROUBLESHOOTING.md) - Common issues and solutions
 - [ENHANCEMENTS.md](./ENHANCEMENTS.md) - Feature enhancements and roadmap
-- [docs/](./docs/) - Technical documentation
 
 ## Requirements
 
@@ -283,13 +296,15 @@ MIT License - See LICENSE file for details
 
 ## Acknowledgments
 
-**Original Author:** Olivier Debeuf De Rijcker
-**Repository:** https://github.com/markov-kernel/databricks-mcp
-**Enhanced by:** Sid with Claude Code assistance
+**Package:** databricks-mcp-genie
+**Maintainer:** Sid
+**Original Author:** Olivier Debeuf De Rijcker (databricks-mcp)
+**Repository:** https://github.com/sidart10/databricks-mcp-genie
 
 Special thanks to:
+- Olivier Debeuf De Rijcker for the original databricks-mcp implementation
 - Anthropic for Claude and the MCP protocol
-- Databricks for their comprehensive SDK
+- Databricks for their comprehensive SDK and Genie AI
 - The open source community
 
 ---
