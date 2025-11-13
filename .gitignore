@@ -106,3 +106,6 @@ Thumbs.db
 
 # Log files
 *.log
+
+# Claude Code temporary files
+.claude/

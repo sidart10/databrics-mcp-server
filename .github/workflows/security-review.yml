@@ -1,0 +1,49 @@
+name: Security Review
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
+jobs:
+  security-review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Run Security Review
+        uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          model: claude-opus-4-20250514
+          prompt: |
+            Perform a comprehensive security audit of this pull request.
+            
+            Check for:
+            - Exposed secrets, API keys, or credentials
+            - SQL injection vulnerabilities
+            - XSS (Cross-Site Scripting) vulnerabilities
+            - Authentication and authorization issues
+            - Insecure dependencies or outdated packages
+            - Unsafe deserialization
+            - Path traversal vulnerabilities
+            - Command injection risks
+            - Insecure cryptographic practices
+            - Sensitive data exposure
+            
+            For each finding, specify:
+            - Severity level (CRITICAL, HIGH, MEDIUM, LOW)
+            - Exact file and line number
+            - Clear explanation of the vulnerability
+            - Recommended fix
+            
+            Only comment if security issues are found.
