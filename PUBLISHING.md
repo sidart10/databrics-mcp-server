@@ -213,7 +213,7 @@ git tag -a v1.0.0 -m "Release version 1.0.0"
 git push origin v1.0.0
 
 # Or create a GitHub release
-# Go to https://github.com/sidart10/databricks-mcp-genie/releases/new
+# Go to https://github.com/sidart10/databrics-mcp-server/releases/new
 ```
 
 ## Quick Reference Commands

@@ -87,7 +87,7 @@ Claude Code can use the same `databricks-mcp-genie` package. The config would be
 
 ### Option B: Different Distribution
 If you want something different for Claude Code:
-1. **GitHub installation**: `pip install git+https://github.com/sidart10/databricks-mcp-genie`
+1. **GitHub installation**: `pip install git+https://github.com/sidart10/databrics-mcp-server`
 2. **Local installation**: Share the wheel file directly
 3. **Custom installer script**: We can create one
 
@@ -125,7 +125,7 @@ pip install databricks-mcp-genie
 
 - **Setup Guide**: `docs/CURSOR_SETUP.md`
 - **PyPI Package**: https://pypi.org/project/databricks-mcp-genie/ (after you publish)
-- **GitHub Repo**: https://github.com/sidart10/databricks-mcp-genie
+- **GitHub Repo**: https://github.com/sidart10/databrics-mcp-server
 - **Issues**: Create GitHub issues for bug reports
 
 ## Version Updates

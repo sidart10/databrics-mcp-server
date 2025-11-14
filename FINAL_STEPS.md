@@ -9,7 +9,7 @@ You have the PyPI Trusted Publisher form open. Fill it in:
 ```
 ✅ PyPI Project Name: databricks-mcp-genie
 ✅ Owner: sidart10
-✅ Repository name: databricks-mcp-genie
+✅ Repository name: databrics-mcp-server
 ✅ Workflow name: publish.yml
 ✅ Environment name: pypi
 ```
@@ -52,7 +52,7 @@ git add .
 git commit -m "Initial commit - databricks-mcp-genie v1.0.0"
 
 # Add your GitHub repo as remote
-git remote add origin https://github.com/sidart10/databricks-mcp-genie.git
+git remote add origin https://github.com/sidart10/databrics-mcp-server.git
 
 # Push to GitHub
 git branch -M main
@@ -65,7 +65,7 @@ This automatically publishes to PyPI!
 
 ### Via GitHub Website:
 
-1. Go to `https://github.com/sidart10/databricks-mcp-genie`
+1. Go to `https://github.com/sidart10/databrics-mcp-server`
 2. Click **"Releases"** (right sidebar)
 3. Click **"Create a new release"**
 4. Fill in:
@@ -126,7 +126,7 @@ Enhanced with Genie AI integration and team-friendly distribution.
 
 ### Check GitHub Actions
 
-1. Go to https://github.com/sidart10/databricks-mcp-genie/actions
+1. Go to https://github.com/sidart10/databrics-mcp-server/actions
 2. You should see "Publish to PyPI" workflow running
 3. Wait for green checkmark ✅
 

@@ -109,3 +109,7 @@ Thumbs.db
 
 # Claude Code temporary files
 .claude/
+
+# MCP config files with credentials
+.mcp.json
+.cursor/mcp.json

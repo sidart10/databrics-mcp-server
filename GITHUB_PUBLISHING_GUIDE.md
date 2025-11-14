@@ -17,7 +17,7 @@ You're already on this page! Fill in the form with these **exact values**:
 ```
 PyPI Project Name: databricks-mcp-genie
 Owner: sidart10
-Repository name: databricks-mcp-genie
+Repository name: databrics-mcp-server
 Workflow name: publish.yml
 Environment name: pypi
 ```
@@ -47,7 +47,7 @@ git add .
 git commit -m "Initial commit - databricks-mcp-genie v1.0.0"
 
 # Add remote (replace with your actual repo URL)
-git remote add origin https://github.com/sidart10/databricks-mcp-genie.git
+git remote add origin https://github.com/sidart10/databrics-mcp-server.git
 
 # Push to GitHub
 git branch -M main
@@ -58,7 +58,7 @@ git push -u origin main
 
 #### Option A: Via GitHub Web Interface (Easier)
 
-1. Go to your repo: `https://github.com/sidart10/databricks-mcp-genie`
+1. Go to your repo: `https://github.com/sidart10/databrics-mcp-server`
 2. Click on **"Releases"** (right sidebar)
 3. Click **"Create a new release"**
 4. Fill in:
@@ -227,7 +227,7 @@ Once your package is live on PyPI:
 
 - GitHub Actions docs: https://docs.github.com/en/actions
 - PyPI Trusted Publishers: https://docs.pypi.org/trusted-publishers/
-- Your workflow runs: https://github.com/sidart10/databricks-mcp-genie/actions
+- Your workflow runs: https://github.com/sidart10/databrics-mcp-server/actions
 
 ---
 

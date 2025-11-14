@@ -9,7 +9,7 @@
 git init
 git add .
 git commit -m "Initial commit - v1.0.0"
-git remote add origin https://github.com/sidart10/databricks-mcp-genie.git
+git remote add origin https://github.com/sidart10/databrics-mcp-server.git
 git push -u origin main
 
 # 4. Create GitHub release v1.0.0 → Package auto-publishes!
@@ -69,7 +69,7 @@ pip install dist/databricks_mcp_genie-1.0.0-py3-none-any.whl
 tar -tzf dist/databricks_mcp_genie-1.0.0.tar.gz | less
 
 # View workflow runs
-# https://github.com/sidart10/databricks-mcp-genie/actions
+# https://github.com/sidart10/databrics-mcp-server/actions
 ```
 
 ## Important Files
@@ -82,8 +82,8 @@ tar -tzf dist/databricks_mcp_genie-1.0.0.tar.gz | less
 ## Links
 
 - PyPI Package: https://pypi.org/project/databricks-mcp-genie/
-- GitHub Repo: https://github.com/sidart10/databricks-mcp-genie
-- GitHub Actions: https://github.com/sidart10/databricks-mcp-genie/actions
+- GitHub Repo: https://github.com/sidart10/databrics-mcp-server
+- GitHub Actions: https://github.com/sidart10/databrics-mcp-server/actions
 - PyPI Publishing: https://pypi.org/manage/account/publishing/
 
 ## Support

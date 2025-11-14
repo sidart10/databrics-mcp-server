@@ -216,7 +216,7 @@ Share this guide with your team along with:
 
 ## Support
 
-- GitHub Issues: https://github.com/sidart10/databricks-mcp-genie/issues
+- GitHub Issues: https://github.com/sidart10/databrics-mcp-server/issues
 - PyPI Package: https://pypi.org/project/databricks-mcp-genie/
 - Full Documentation: See README.md in the repository
 

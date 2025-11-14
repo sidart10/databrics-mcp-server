@@ -44,12 +44,12 @@ PRs are automatically reviewed using GitHub Actions powered by Claude.
 ### Installation
 
 ```bash
-# Install from PyPI (recommended)
+# Install from PyPI (recommended for production use)
 pip install databricks-mcp-genie
 
-# Or install from source
-git clone https://github.com/sidart10/databricks-mcp-genie.git
-cd databricks-mcp-genie
+# Or install from source (for development)
+git clone https://github.com/sidart10/databrics-mcp-server.git
+cd databrics-mcp-server
 pip install -e ".[dev]"
 ```
 
@@ -59,17 +59,18 @@ pip install -e ".[dev]"
    - Workspace URL: `https://your-workspace.cloud.databricks.com`
    - Personal Access Token: Generate from User Settings > Developer > Access Tokens
 
-2. **Configure MCP client** (Claude Desktop example):
+2. **Configure MCP client**:
 
-Edit `~/.config/Claude/claude_desktop_config.json`:
+**For Cursor**: See the [Cursor Setup Guide](docs/CURSOR_SETUP.md) for detailed instructions.
+
+**For Claude Desktop**: Edit `~/.config/Claude/claude_desktop_config.json`:
 
 ```json
 {
   "mcpServers": {
     "databricks": {
-      "command": "/path/to/databrics-mcp-server/.venv/bin/python",
+      "command": "python3",
       "args": ["-m", "databricks_mcp.main"],
-      "cwd": "/path/to/databrics-mcp-server",
       "env": {
         "DATABRICKS_HOST": "https://your-workspace.cloud.databricks.com",
         "DATABRICKS_TOKEN": "your-personal-access-token-here"
@@ -79,19 +80,18 @@ Edit `~/.config/Claude/claude_desktop_config.json`:
 }
 ```
 
+> **Note**: After installing via pip, you can use `python3` directly. No need for virtual environment paths.
+
 3. **Restart Claude Desktop**
 
 ### Verify Installation
 
 ```bash
-# Test server starts correctly
+# If installed via pip
+python3 -c "from databricks_mcp.server import DatabricksMCPServer; print('✓ Installation successful')"
+
+# If installed from source
 .venv/bin/python -m databricks_mcp.main
-
-# Run test suite
-.venv/bin/pytest tests/ -v
-
-# Quick server test script
-./test_server.sh
 ```
 
 ## Available Features
@@ -306,10 +306,10 @@ MIT License - See LICENSE file for details
 
 ## Acknowledgments
 
-**Package:** databricks-mcp-genie
+**PyPI Package:** databricks-mcp-genie
+**Source Repository:** https://github.com/sidart10/databrics-mcp-server
 **Maintainer:** Sid
 **Original Author:** Olivier Debeuf De Rijcker (databricks-mcp)
-**Repository:** https://github.com/sidart10/databricks-mcp-genie
 
 Special thanks to:
 - Olivier Debeuf De Rijcker for the original databricks-mcp implementation
