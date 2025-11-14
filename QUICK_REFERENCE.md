@@ -4,15 +4,12 @@
 
 ```bash
 # 1. Fill PyPI form (in browser) → Click "Add"
-# 2. Create GitHub repo
-# 3. Push code
-git init
-git add .
-git commit -m "Initial commit - v1.0.0"
-git remote add origin https://github.com/sidart10/databrics-mcp-server.git
-git push -u origin main
+#    PyPI Project Name: databricks-mcp-genie
+#    Repository name: databrics-mcp-server
+#    Workflow name: publish.yml
 
-# 4. Create GitHub release v1.0.0 → Package auto-publishes!
+# 2. Create GitHub release v1.0.0 → Package auto-publishes!
+#    Go to: https://github.com/sidart10/databrics-mcp-server/releases/new
 ```
 
 ## Future Version Updates
@@ -31,12 +28,15 @@ git push
 
 ## Team Installation (After Publishing)
 
-```bash
-# Install
-pip install databricks-mcp-genie
+**No pip install needed!** Just configure MCP settings:
 
-# Configure Cursor
-# See: docs/CURSOR_SETUP.md
+```bash
+# 1. Install uv (one-time)
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# 2. Configure Cursor MCP settings with uvx
+
+# 3. Restart Cursor - uvx auto-downloads!
 ```
 
 ## Cursor Config Template
@@ -45,8 +45,8 @@ pip install databricks-mcp-genie
 {
   "mcpServers": {
     "databricks": {
-      "command": "/usr/local/bin/python3",
-      "args": ["-m", "databricks_mcp.main"],
+      "command": "uvx",
+      "args": ["databricks-mcp-genie"],
       "env": {
         "DATABRICKS_HOST": "https://your-workspace.cloud.databricks.com",
         "DATABRICKS_TOKEN": "your-token-here"
@@ -60,36 +60,27 @@ pip install databricks-mcp-genie
 
 ```bash
 # Build package locally
-python -m build
+uv build
 
-# Test installation
-pip install dist/databricks_mcp_genie-1.0.0-py3-none-any.whl
+# Test locally
+uv run -m databricks_mcp.main
 
-# Check package contents
-tar -tzf dist/databricks_mcp_genie-1.0.0.tar.gz | less
+# Test uvx (after publishing)
+uvx databricks-mcp-genie
 
-# View workflow runs
-# https://github.com/sidart10/databrics-mcp-server/actions
+# Force reinstall
+uvx --reinstall databricks-mcp-genie
 ```
-
-## Important Files
-
-- `pyproject.toml` - Package metadata and version
-- `.github/workflows/publish.yml` - Auto-publishing workflow
-- `docs/CURSOR_SETUP.md` - Team installation guide
-- `FINAL_STEPS.md` - Complete publishing checklist
 
 ## Links
 
-- PyPI Package: https://pypi.org/project/databricks-mcp-genie/
-- GitHub Repo: https://github.com/sidart10/databrics-mcp-server
-- GitHub Actions: https://github.com/sidart10/databrics-mcp-server/actions
-- PyPI Publishing: https://pypi.org/manage/account/publishing/
+- PyPI: https://pypi.org/project/databricks-mcp-genie/
+- GitHub: https://github.com/sidart10/databrics-mcp-server
+- Actions: https://github.com/sidart10/databrics-mcp-server/actions
+- Releases: https://github.com/sidart10/databrics-mcp-server/releases/new
 
 ## Support
 
-Questions? Check:
-1. `FINAL_STEPS.md` - Step-by-step publishing
-2. `GITHUB_PUBLISHING_GUIDE.md` - Detailed explanations
-3. `docs/CURSOR_SETUP.md` - Installation help
-4. GitHub Issues - Report bugs
+1. `FINAL_STEPS.md` - Publishing steps
+2. `docs/CURSOR_SETUP.md` - Installation help
+3. GitHub Issues - Bug reports

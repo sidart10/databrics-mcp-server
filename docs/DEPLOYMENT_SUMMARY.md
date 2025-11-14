@@ -2,22 +2,25 @@
 
 ## What We Did
 
-Prepared your Databricks MCP server for one-click installation as a PyPI package for your team.
+Prepared your Databricks MCP server for automatic distribution via PyPI using the modern `uvx` approach.
 
 ### Package Details
 
 - **Package Name**: `databricks-mcp-genie`
 - **Version**: 1.0.0
 - **Type**: Python package (PyPI)
+- **Distribution**: Via `uvx` (automatic download and execution)
 - **Built**: ✅ Ready in `dist/` directory
 
 ### Files Created/Modified
 
 1. **pyproject.toml** - Updated with new package name, version, and metadata
-2. **README.md** - Updated with new package name and installation instructions
+2. **README.md** - Updated with uvx-based installation instructions
 3. **MANIFEST.in** - Created to exclude development files from distribution
-4. **docs/CURSOR_SETUP.md** - Complete guide for your team to install in Cursor
-5. **PUBLISHING.md** - Instructions for you to publish to PyPI
+4. **docs/CURSOR_SETUP.md** - Complete uvx setup guide for your team
+5. **.github/workflows/publish.yml** - GitHub Actions for automated PyPI publishing
+6. **GITHUB_PUBLISHING_GUIDE.md** - Step-by-step publishing instructions
+7. **.gitignore** - Protected credential files from being committed
 
 ### Package Build Output
 
@@ -29,123 +32,180 @@ dist/
 
 ## Next Steps for You (Sid)
 
-### 1. Publish to PyPI (One-time)
+### 1. Publish to PyPI via GitHub Actions
 
-Follow the instructions in `PUBLISHING.md`:
+**Option A: Automated Publishing (Recommended)**
 
-```bash
-# Quick version:
-# 1. Create PyPI account at https://pypi.org/account/register/
-# 2. Generate API token
-# 3. Configure ~/.pypirc with your token
-# 4. Test on TestPyPI first
-.venv/bin/twine upload --repository testpypi dist/*
+1. Fill in PyPI Trusted Publisher form (you have this open):
+   ```
+   PyPI Project Name: databricks-mcp-genie
+   Owner: sidart10
+   Repository name: databrics-mcp-server
+   Workflow name: publish.yml
+   Environment name: pypi
+   ```
+2. Click "Add" on PyPI
+3. Create GitHub release at: https://github.com/sidart10/databrics-mcp-server/releases/new
+   - Tag: `v1.0.0`
+   - Title: `v1.0.0 - Initial Release`
+4. GitHub Actions automatically publishes to PyPI!
 
-# 5. Then publish to production PyPI
-.venv/bin/twine upload dist/*
-```
+**Option B: Manual Publishing**
+
+See `PUBLISHING.md` for manual `twine` upload instructions.
 
 ### 2. Share with Your Team
 
-Once published, send your team:
+Once published to PyPI, send your team:
 
-1. **The Cursor setup guide**: `docs/CURSOR_SETUP.md`
-2. **Installation command**: `pip install databricks-mcp-genie`
-3. **Your Databricks workspace URL**
-4. **Instructions to generate their own personal access token**
+1. **Cursor Setup Guide**: https://github.com/sidart10/databrics-mcp-server/blob/main/docs/CURSOR_SETUP.md
+2. **Your Databricks workspace URL**
+3. **Instructions to generate their own personal access token**
 
-That's it! No complex setup scripts or configurations.
+**That's it!** No installation commands needed - `uvx` handles everything.
 
 ## For Your Team Members
 
-### One-Click Installation (After you publish)
+### True One-Click Setup (After you publish)
+
+**What they do:**
 
 ```bash
-# Step 1: Install package
-pip install databricks-mcp-genie
+# Step 1: Install uv (one-time, if they don't have it)
+curl -LsSf https://astral.sh/uv/install.sh | sh
 
-# Step 2: Find Python path
-which python3
+# Step 2: Configure Cursor MCP settings
+# Add to Cursor settings:
+{
+  "mcpServers": {
+    "databricks": {
+      "command": "uvx",
+      "args": ["databricks-mcp-genie"],
+      "env": {
+        "DATABRICKS_HOST": "https://your-workspace.cloud.databricks.com",
+        "DATABRICKS_TOKEN": "your-token-here"
+      }
+    }
+  }
+}
 
-# Step 3: Add to Cursor settings
-# Copy config from docs/CURSOR_SETUP.md
-
-# Step 4: Add your credentials
-# DATABRICKS_HOST and DATABRICKS_TOKEN
-
-# Step 5: Restart Cursor
+# Step 3: Restart Cursor
+# Done! uvx automatically downloads and runs the server
 ```
 
-That's literally it - **5 steps** to full Databricks integration!
+**Just 3 steps** - and they never manually install the package!
 
 ## What About Claude Code?
 
-You mentioned handling Claude Code separately. Here are your options:
+Same approach works for Claude Code! Just configure in Claude Code's MCP settings:
 
-### Option A: Same PyPI Package (Recommended)
-Claude Code can use the same `databricks-mcp-genie` package. The config would be similar to Cursor, just in Claude Code's settings.
+```json
+{
+  "mcpServers": {
+    "databricks": {
+      "command": "uvx",
+      "args": ["databricks-mcp-genie"],
+      "env": {
+        "DATABRICKS_HOST": "https://your-workspace.cloud.databricks.com",
+        "DATABRICKS_TOKEN": "your-token-here"
+      }
+    }
+  }
+}
+```
 
-### Option B: Different Distribution
-If you want something different for Claude Code:
-1. **GitHub installation**: `pip install git+https://github.com/sidart10/databrics-mcp-server`
-2. **Local installation**: Share the wheel file directly
-3. **Custom installer script**: We can create one
-
-**Let me know which you prefer for Claude Code!**
+Claude Code will automatically download and run the server via `uvx`.
 
 ## Benefits of This Approach
 
-1. **One-Click Install**: Team members just run `pip install databricks-mcp-genie`
-2. **Version Control**: Easy to update - just `pip install --upgrade databricks-mcp-genie`
-3. **No Local Builds**: No need for team to clone repo or build from source
-4. **Consistent**: Everyone gets the exact same version
-5. **Standard**: Uses familiar Python/pip workflow
-6. **Secure**: Each person uses their own Databricks credentials
+1. **No manual installation**: `uvx` downloads from PyPI automatically
+2. **Always latest version**: `uvx` can be configured to use latest or specific versions
+3. **Isolated environments**: Each MCP server runs in its own environment
+4. **Standard MCP approach**: Following MCP best practices
+5. **Cross-platform**: Works on macOS, Linux, Windows
+6. **Version updates**: Team members get updates automatically (or pin to specific version)
 
-## Testing Before Team Rollout
+## How uvx Works
 
-Before sharing with your team, test the workflow:
+When Cursor/Claude Desktop starts:
+1. Reads MCP configuration
+2. Sees `uvx databricks-mcp-genie` command
+3. `uvx` checks if package exists locally
+4. If not, downloads from PyPI
+5. Creates isolated Python environment
+6. Runs the MCP server
+7. Connects to your Databricks workspace
 
-```bash
-# 1. Publish to PyPI (see PUBLISHING.md)
+**All automatic!** No pip install, no virtual environments, no path configuration.
 
-# 2. Test fresh install on your machine
-python3 -m venv /tmp/test-team-install
-source /tmp/test-team-install/bin/activate
-pip install databricks-mcp-genie
+## Version Management
 
-# 3. Configure in a test Cursor instance
+**Latest version (default):**
+```json
+"args": ["databricks-mcp-genie"]
+```
 
-# 4. Verify it works with Databricks
+**Specific version:**
+```json
+"args": ["databricks-mcp-genie==1.0.0"]
+```
 
-# 5. Share with team!
+**Development/Local version:**
+```json
+{
+  "command": "uv",
+  "args": [
+    "--directory", "/path/to/databrics-mcp-server",
+    "run", "python", "-m", "databricks_mcp.main"
+  ]
+}
 ```
 
 ## Support Resources for Your Team
 
-- **Setup Guide**: `docs/CURSOR_SETUP.md`
-- **PyPI Package**: https://pypi.org/project/databricks-mcp-genie/ (after you publish)
+- **Setup Guide**: https://github.com/sidart10/databrics-mcp-server/blob/main/docs/CURSOR_SETUP.md
+- **PyPI Package**: https://pypi.org/project/databricks-mcp-genie/
 - **GitHub Repo**: https://github.com/sidart10/databrics-mcp-server
-- **Issues**: Create GitHub issues for bug reports
+- **Issues**: https://github.com/sidart10/databrics-mcp-server/issues
 
 ## Version Updates
 
-When you make improvements:
+When you publish a new version:
 
-1. Update version in `pyproject.toml` (e.g., 1.0.0 → 1.0.1)
-2. Rebuild: `python -m build`
-3. Publish new version: `twine upload dist/*`
-4. Team updates: `pip install --upgrade databricks-mcp-genie`
+1. Update `version = "1.0.1"` in `pyproject.toml`
+2. Commit and push changes
+3. Create GitHub release `v1.0.1`
+4. GitHub Actions publishes to PyPI automatically
+5. Team members get update next time they restart their MCP client
 
-## Questions?
+Or they can force update:
+```bash
+uvx --reinstall databricks-mcp-genie
+```
 
-Common questions answered in:
-- **Publishing**: See `PUBLISHING.md`
-- **Cursor Setup**: See `docs/CURSOR_SETUP.md`
-- **Usage**: See `README.md`
-- **Troubleshooting**: See `TROUBLESHOOTING.md`
+## Complete Checklist
+
+- [x] Package metadata updated
+- [x] Package built successfully
+- [x] GitHub Actions workflow created
+- [x] Documentation updated with uvx approach
+- [x] Security files added to .gitignore
+- [x] Code pushed to GitHub
+- [ ] Fill in PyPI Trusted Publisher form
+- [ ] Create GitHub release v1.0.0
+- [ ] Verify package on PyPI
+- [ ] Test with uvx locally
+- [ ] Share with team
+
+## You're Done!
+
+Once you create the GitHub release, your team can use:
+```bash
+uvx databricks-mcp-genie
+```
+
+Or configure in Cursor/Claude Code MCP settings - that's it!
 
 ---
 
-**Status**: ✅ Ready for PyPI publication
-**Next Action**: Follow `PUBLISHING.md` to publish to PyPI
+**Next Action**: Go to https://github.com/sidart10/databrics-mcp-server/releases/new and create release v1.0.0
