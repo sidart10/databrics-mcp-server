@@ -16,14 +16,19 @@ Enables AI assistants to directly interact with your Databricks workspace:
 
 ### For Cursor Users
 
-**Team Installation (Recommended)**: See [Cursor Setup Guide](docs/CURSOR_SETUP.md) for one-click installation instructions.
+**Recommended Setup**: No manual installation needed! Use `uvx` to automatically run the server.
 
-Quick install:
-```bash
-pip install databricks-mcp-genie
-```
+1. Install `uv` (one-time): `curl -LsSf https://astral.sh/uv/install.sh | sh`
+2. Configure Cursor MCP settings with:
+   ```json
+   {
+     "command": "uvx",
+     "args": ["databricks-mcp-genie"]
+   }
+   ```
+3. Add your Databricks credentials to the `env` section
 
-Then configure in Cursor settings - full details in the [Cursor Setup Guide](docs/CURSOR_SETUP.md).
+Full details in the [Cursor Setup Guide](docs/CURSOR_SETUP.md).
 
 ### Automated Code Review
 
@@ -43,14 +48,17 @@ PRs are automatically reviewed using GitHub Actions powered by Claude.
 
 ### Installation
 
-```bash
-# Install from PyPI (recommended for production use)
-pip install databricks-mcp-genie
+**For MCP Clients (Recommended)**:
+No manual installation! Use `uvx` in your MCP client configuration - it automatically downloads and runs the server.
 
-# Or install from source (for development)
+**For Development**:
+```bash
+# Clone the repository
 git clone https://github.com/sidart10/databrics-mcp-server.git
 cd databrics-mcp-server
-pip install -e ".[dev]"
+
+# Install with uv
+uv sync
 ```
 
 ### Configuration
@@ -69,8 +77,8 @@ pip install -e ".[dev]"
 {
   "mcpServers": {
     "databricks": {
-      "command": "python3",
-      "args": ["-m", "databricks_mcp.main"],
+      "command": "uvx",
+      "args": ["databricks-mcp-genie"],
       "env": {
         "DATABRICKS_HOST": "https://your-workspace.cloud.databricks.com",
         "DATABRICKS_TOKEN": "your-personal-access-token-here"
@@ -80,18 +88,20 @@ pip install -e ".[dev]"
 }
 ```
 
-> **Note**: After installing via pip, you can use `python3` directly. No need for virtual environment paths.
+> **Note**: `uvx` (included with `uv`) automatically downloads and runs the MCP server. No manual installation needed!
 
 3. **Restart Claude Desktop**
 
 ### Verify Installation
 
-```bash
-# If installed via pip
-python3 -c "from databricks_mcp.server import DatabricksMCPServer; print('✓ Installation successful')"
+**With uvx** (after configuring Cursor/Claude Desktop):
+- Restart your MCP client
+- Try: "List my Databricks clusters"
+- If you see results, it's working!
 
-# If installed from source
-.venv/bin/python -m databricks_mcp.main
+**From source** (development):
+```bash
+uv run -m databricks_mcp.main
 ```
 
 ## Available Features

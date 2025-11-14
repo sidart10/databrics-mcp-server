@@ -1,73 +1,59 @@
 # Cursor Setup Guide for databricks-mcp-genie
 
-Quick guide to install and configure the Databricks MCP Genie server for your team's Cursor IDE.
+**The correct way to use MCP servers**: Use `uvx` to automatically download and run the server.
 
 ## Prerequisites
 
-- Python 3.10 or higher
+- [uv](https://docs.astral.sh/uv/) (Python package manager)
 - Databricks workspace access
 - Databricks personal access token
 - Cursor IDE
 
-## Installation Steps
+## Quick Start (3 Steps)
 
-### 1. Install the Package
+### 1. Install uv (One-Time Setup)
 
-Open your terminal and run:
-
+**macOS/Linux:**
 ```bash
-pip install databricks-mcp-genie
+curl -LsSf https://astral.sh/uv/install.sh | sh
 ```
 
-Or if you need a specific Python version:
-
-```bash
-python3.10 -m pip install databricks-mcp-genie
-# or
-python3.11 -m pip install databricks-mcp-genie
+**Windows:**
+```powershell
+powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
 ```
+
+**Or with Homebrew:**
+```bash
+brew install uv
+```
+
+> `uv` is a modern Python package manager. `uvx` (included with uv) automatically downloads and runs MCP servers.
 
 ### 2. Get Your Databricks Credentials
 
-You'll need two things:
+You need two things:
 
-1. **Workspace URL**: Your Databricks workspace URL (e.g., `https://your-company.cloud.databricks.com`)
+1. **Workspace URL**: e.g., `https://your-company.cloud.databricks.com`
 2. **Personal Access Token**:
-   - Go to your Databricks workspace
-   - Click your profile icon (top right)
-   - Go to **User Settings** → **Developer** → **Access Tokens**
-   - Click **Generate New Token**
-   - Copy the token (you won't see it again!)
+   - Go to Databricks workspace → Profile icon → User Settings
+   - Developer → Access Tokens → Generate New Token
+   - Copy the token immediately (you won't see it again!)
 
 ### 3. Configure Cursor
 
-#### Find your Python path
-
-First, find where pip installed the package:
-
-```bash
-which python3
-# Example output: /usr/local/bin/python3
-# or: /opt/homebrew/bin/python3
-# or: ~/.pyenv/versions/3.11.0/bin/python3
-```
-
-Use this path in the next step.
-
-#### Edit Cursor Settings
-
 1. Open Cursor
-2. Open **Settings** (Cmd+, on Mac, Ctrl+, on Windows/Linux)
+2. Go to **Settings** (Cmd+, on Mac, Ctrl+, on Windows/Linux)
 3. Search for "MCP" or go to **Features** → **Model Context Protocol**
-4. Click **Edit Config** or open the settings JSON file
-5. Add the following configuration:
+4. Click **Edit Config** to open the MCP configuration JSON
+5. Add this configuration:
 
 ```json
 {
   "mcpServers": {
     "databricks": {
-      "command": "/usr/local/bin/python3",
-      "args": ["-m", "databricks_mcp.main"],
+      "command": "uvx",
+      "args": ["databricks-mcp-genie"],
       "env": {
         "DATABRICKS_HOST": "https://your-workspace.cloud.databricks.com",
         "DATABRICKS_TOKEN": "your-personal-access-token-here"
@@ -77,21 +63,22 @@ Use this path in the next step.
 }
 ```
 
-**Important**:
-- Replace `/usr/local/bin/python3` with your actual Python path from step 3.1
-- Replace `https://your-workspace.cloud.databricks.com` with your Databricks workspace URL
-- Replace `your-personal-access-token-here` with your actual token
+**Replace:**
+- `https://your-workspace.cloud.databricks.com` with your workspace URL
+- `your-personal-access-token-here` with your actual token
 
-#### Optional: SQL Warehouse ID
+**That's it!** No pip install, no virtual environments. `uvx` handles everything automatically.
 
-If you want to use SQL execution tools without specifying warehouse ID each time:
+### Optional: Add SQL Warehouse ID
+
+To avoid specifying warehouse ID every time:
 
 ```json
 {
   "mcpServers": {
     "databricks": {
-      "command": "/usr/local/bin/python3",
-      "args": ["-m", "databricks_mcp.main"],
+      "command": "uvx",
+      "args": ["databricks-mcp-genie"],
       "env": {
         "DATABRICKS_HOST": "https://your-workspace.cloud.databricks.com",
         "DATABRICKS_TOKEN": "your-personal-access-token-here",
@@ -104,9 +91,9 @@ If you want to use SQL execution tools without specifying warehouse ID each time
 
 ### 4. Restart Cursor
 
-Close and reopen Cursor completely for the changes to take effect.
+Close and reopen Cursor completely.
 
-### 5. Verify Installation
+### 5. Verify It Works
 
 In Cursor, try asking:
 
@@ -117,108 +104,155 @@ In Cursor, try asking:
 or
 
 ```
-"Show me the available Genie AI spaces"
+"Show me available Genie AI spaces"
 ```
 
 If you see results, you're all set!
 
+## How It Works
+
+When Cursor starts:
+1. `uvx` automatically downloads `databricks-mcp-genie` from PyPI
+2. Creates an isolated environment
+3. Runs the MCP server
+4. Connects Cursor to your Databricks workspace
+
+**No manual installation needed!** `uvx` handles everything.
+
 ## Troubleshooting
 
-### "Command not found" or "Module not found"
+### "Command not found: uvx"
 
-**Problem**: Cursor can't find Python or the databricks_mcp module.
+**Problem**: uv isn't installed or not in PATH.
 
 **Solution**:
-1. Make sure you used the correct Python path in the config
-2. Try using the full path to the module:
-   ```bash
-   # Find where the module is installed
-   python3 -c "import databricks_mcp; print(databricks_mcp.__file__)"
-   ```
-3. You might need to use a virtual environment:
-   ```bash
-   python3 -m venv ~/databricks-mcp-env
-   source ~/databricks-mcp-env/bin/activate
-   pip install databricks-mcp-genie
-   # Then use ~/databricks-mcp-env/bin/python3 in Cursor config
-   ```
+```bash
+# Check if uv is installed
+which uv
+
+# If not found, install it
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# Restart your terminal
+```
 
 ### "Authentication failed" or "Invalid token"
 
 **Problem**: Databricks credentials are incorrect.
 
 **Solution**:
-1. Verify your workspace URL is correct (should start with `https://`)
+1. Verify workspace URL starts with `https://` and ends with `.cloud.databricks.com`
 2. Generate a new access token
-3. Make sure there are no extra spaces in your token
-4. Check the token hasn't expired
+3. Check for extra spaces in the token
+4. Verify token hasn't expired
 
-### "Connection timeout" or "Cannot connect"
+### "Connection timeout"
 
-**Problem**: Network or firewall issues.
+**Problem**: Can't reach Databricks workspace.
 
 **Solution**:
-1. Verify you can access your Databricks workspace in a browser
-2. Check if you're behind a corporate firewall/VPN
-3. Make sure your workspace URL is accessible from your machine
+1. Check you can access the workspace in a browser
+2. Verify you're not behind a firewall/VPN that blocks access
+3. Test connectivity: `curl https://your-workspace.cloud.databricks.com`
 
 ### Server not showing up in Cursor
 
 **Problem**: MCP server isn't loaded.
 
 **Solution**:
-1. Check Cursor's MCP logs (usually in Cursor's developer console)
-2. Verify the JSON syntax in your config is correct (no trailing commas, proper quotes)
-3. Completely quit Cursor (not just close the window) and restart
+1. Check JSON syntax (no trailing commas, proper quotes)
+2. Verify `uvx` works: Run `uvx --version` in terminal
+3. Completely quit Cursor (not just close window) and restart
+4. Check Cursor's developer console for errors
+
+### "Package not found" error
+
+**Problem**: PyPI package hasn't been published yet or name is wrong.
+
+**Solution**:
+- Wait for the package to be published to PyPI
+- Verify package name is exactly `databricks-mcp-genie`
+- Check https://pypi.org/project/databricks-mcp-genie/
+
+## Alternative: Development/Local Setup
+
+If you're developing or the package isn't published yet:
+
+```json
+{
+  "mcpServers": {
+    "databricks": {
+      "command": "uv",
+      "args": [
+        "--directory",
+        "/path/to/databrics-mcp-server",
+        "run",
+        "python",
+        "-m",
+        "databricks_mcp.main"
+      ],
+      "env": {
+        "DATABRICKS_HOST": "https://your-workspace.cloud.databricks.com",
+        "DATABRICKS_TOKEN": "your-personal-access-token-here"
+      }
+    }
+  }
+}
+```
+
+Replace `/path/to/databrics-mcp-server` with the actual path to the cloned repository.
 
 ## Available Features
 
-Once configured, you can ask Cursor to:
+Once configured, you can:
 
-### Genie AI (Natural Language Queries)
+### Genie AI (Natural Language)
 - "Ask Genie: What were the top products by revenue last month?"
-- "Use Genie to analyze customer churn trends"
-- "Query Genie about sales by region"
+- "Use Genie to analyze customer churn"
+- "Query sales by region with Genie"
 
 ### Cluster Management
-- "List all my clusters"
+- "List all my Databricks clusters"
 - "Start cluster xyz"
-- "Create a new cluster for testing"
+- "Create a new cluster"
 
 ### SQL Execution
 - "Execute: SELECT * FROM catalog.schema.table LIMIT 10"
-- "Run this query on my warehouse"
+- "Run SQL query on my warehouse"
 
 ### Jobs & Notebooks
-- "List my Databricks jobs"
+- "List my jobs"
 - "Run notebook /Users/me/analysis"
 - "Show recent job runs"
 
 ### Unity Catalog
-- "List all catalogs"
+- "List catalogs"
 - "Show tables in my_catalog.my_schema"
-- "Get lineage for this table"
+- "Get table lineage"
 
 ## Security Best Practices
 
-1. **Never commit credentials**: Don't put tokens in code or git repositories
-2. **Use workspace-level tokens**: Avoid personal admin tokens
-3. **Rotate tokens regularly**: Generate new tokens periodically
-4. **Limit token scope**: Use the minimum required permissions
-5. **Team sharing**: Each team member should use their own token
+1. **Never commit tokens**: Don't put tokens in code or git
+2. **Personal tokens**: Each team member should use their own token
+3. **Rotate regularly**: Generate new tokens periodically
+4. **Minimum permissions**: Use tokens with minimum required scope
+5. **Secure storage**: Store credentials securely (use environment variables or secret managers in production)
 
 ## Team Distribution
 
-Share this guide with your team along with:
-1. Your Databricks workspace URL
-2. Instructions on how to generate their own personal access token
-3. Link to this package: `https://pypi.org/project/databricks-mcp-genie/`
+Share with your team:
+1. This setup guide
+2. Your Databricks workspace URL
+3. Instructions to generate their own personal access token
+
+**Installation command:** Just configure MCP settings - `uvx` does the rest!
 
 ## Support
 
 - GitHub Issues: https://github.com/sidart10/databrics-mcp-server/issues
 - PyPI Package: https://pypi.org/project/databricks-mcp-genie/
-- Full Documentation: See README.md in the repository
+- Source Repository: https://github.com/sidart10/databrics-mcp-server
+- Full Documentation: See README.md
 
 ## Version
 
